@@ -1,0 +1,38 @@
+# Secrets — never commit your real .env
+.env
+
+# Your personal order list (tracking numbers, order IDs) — copy
+# orders.example.py to orders.py and edit that instead.
+orders.py
+
+# Local state / runtime data
+orders.db
+*.db
+*.log
+
+# Saved browser sessions for store_generic.py-based adapters (contain cookies)
+*state*.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*$py.class
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Playwright
+/test-results/
+/playwright-report/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

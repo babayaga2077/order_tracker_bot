@@ -1,0 +1,18 @@
+check_orders:
+  image: python:3.11
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"
+  cache:
+    key: orders-db
+    paths:
+      - orders.db
+  before_script:
+    - apt-get update && apt-get install -y xvfb
+    - pip install -r requirements.txt
+    - playwright install --with-deps chromium
+    # orders.py is git-ignored (contains your tracking numbers/order IDs),
+    # so it doesn't exist in the checkout — write it from a CI/CD variable.
+    - echo "$ORDERS_PY" > orders.py
+  script:
+    - xvfb-run -a python check_orders.py
