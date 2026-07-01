@@ -1,0 +1,32 @@
+name: check_orders
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - run: playwright install --with-deps chromium
+      - run: sudo apt-get update && sudo apt-get install -y xvfb
+      - uses: actions/cache@v4
+        with:
+          path: orders.db
+          key: orders-db-${{ github.repository }}
+      # orders.py is git-ignored (contains your tracking numbers/order IDs),
+      # so it doesn't exist in the checkout — write it from a repo secret.
+      - run: echo "$ORDERS_PY" > orders.py
+        env:
+          ORDERS_PY: ${{ secrets.ORDERS_PY }}
+      - run: xvfb-run -a python check_orders.py
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TRACK17_API_KEY: ${{ secrets.TRACK17_API_KEY }}
