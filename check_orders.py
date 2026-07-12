@@ -98,14 +98,19 @@ async def main() -> None:
             )
             continue
 
-        if result.status != previous["last_status"]:
-            logger.info('"%s": status changed: %s -> %s', order["label"], previous["last_status"], result.status)
+        changed = (
+            result.status != previous["last_status"]
+            or result.detail != (previous["last_detail"] or "")
+        )
+        if changed:
+            prev_text = previous["last_status"] + (f" — {previous['last_detail']}" if previous["last_detail"] else "")
+            logger.info('"%s": status changed: %s -> %s', order["label"], prev_text, text)
             await bot.send_message(
                 chat_id=config.chat_id,
                 text=f"\U0001F4E6 Status changed for \"{order['label']}\":\n{text}",
             )
         else:
-            logger.info('"%s": no change (%s)', order["label"], result.status)
+            logger.info('"%s": no change (%s)', order["label"], text)
 
 
 if __name__ == "__main__":
