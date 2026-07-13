@@ -1,0 +1,23 @@
+[Unit]
+Description=Telegram order tracker bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Change if you deploy under a different user/path
+User=tracker
+WorkingDirectory=/opt/order_tracker_bot
+ExecStart=/opt/order_tracker_bot/venv/bin/python bot.py
+# .env is read by the app itself (python-dotenv) from WorkingDirectory
+
+Restart=always
+RestartSec=10
+
+# Hardening (optional but free)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

@@ -14,6 +14,7 @@ class Config:
     track17_api_key: str
     db_path: str
     generic_store_state_path: Optional[str]
+    check_interval_minutes: int
 
 
 def load_config() -> Config:
@@ -33,4 +34,5 @@ def load_config() -> Config:
         track17_api_key=os.getenv("TRACK17_API_KEY", ""),
         db_path=os.getenv("DB_PATH", "orders.db"),
         generic_store_state_path=os.getenv("GENERIC_STORE_STATE_PATH") or None,
+        check_interval_minutes=int(os.getenv("CHECK_INTERVAL_MINUTES", "30")),
     )
