@@ -237,6 +237,10 @@ async def post_shutdown(app: Application) -> None:
 
 
 def main() -> None:
+    # Python 3.12+ no longer auto-creates an event loop in the main thread,
+    # but python-telegram-bot 21.x still expects one — create it explicitly.
+    asyncio.set_event_loop(asyncio.new_event_loop())
+
     app = (
         Application.builder()
         .token(config.bot_token)
